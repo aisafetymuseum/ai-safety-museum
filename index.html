@@ -9,12 +9,12 @@
 <meta property="og:title" content="The Museum of AI Safety">
 <meta property="og:description" content="Walk nine halls and 35 exhibits on how we make AI do what we intend, failures, microscopes, genies, treaties, and the departures board. Free admission.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://aisafety.museum/">
-<meta property="og:image" content="https://aisafety.museum/og.jpg">
+<meta property="og:url" content="https://visit.aisafety.museum/">
+<meta property="og:image" content="https://visit.aisafety.museum/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The Museum of AI Safety">
 <meta name="twitter:description" content="A walkable museum of AI safety: 35 exhibits across nine halls. Free admission. No flash photography.">
-<meta name="twitter:image" content="https://aisafety.museum/og.jpg">
+<meta name="twitter:image" content="https://visit.aisafety.museum/og.jpg">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
 <style>
   :root{
@@ -544,6 +544,39 @@ function paintScene(g,ch,x,y,w,h){
     g.moveTo(w*0.64,h*0.44);g.lineTo(w*0.72,h*0.36);g.stroke();
     g.fillStyle="rgba(255,226,170,0.08)";g.beginPath();
     g.moveTo(0,0);g.lineTo(w*0.3,0);g.lineTo(w*0.12,h);g.lineTo(0,h);g.closePath();g.fill();
+  } else if(ch==="h"){ /* the scaling law, framed like a masterpiece */
+    g.fillStyle="rgb(233,229,215)";g.fillRect(0,0,w,h);
+    /* log-log graph paper: decade lines heavy, minor lines bunching toward each decade */
+    g.strokeStyle="rgb(150,158,172)";g.lineWidth=0.6;
+    const gx0=w*0.12,gx1=w*0.95,gy0=h*0.08,gy1=h*0.86;
+    const decX=(gx1-gx0)/6,decY=(gy1-gy0)/4;
+    for(let d=0;d<6;d++)for(let m=1;m<10;m++){
+      const xx=gx0+d*decX+Math.log10(m)*decX;
+      g.globalAlpha=m===1?0.75:0.25;
+      g.beginPath();g.moveTo(xx,gy0);g.lineTo(xx,gy1);g.stroke();}
+    for(let d=0;d<4;d++)for(let m=1;m<10;m++){
+      const yy=gy0+d*decY+Math.log10(m)*decY;
+      g.globalAlpha=m===1?0.75:0.25;
+      g.beginPath();g.moveTo(gx0,yy);g.lineTo(gx1,yy);g.stroke();}
+    g.globalAlpha=1;
+    g.strokeStyle="rgb(58,56,52)";g.lineWidth=1.8;
+    g.beginPath();g.moveTo(gx0,gy0);g.lineTo(gx0,gy1);g.lineTo(gx1,gy1);g.stroke();
+    /* the line itself: loss falling as compute grows, seven orders wide */
+    const lx0=gx0+decX*0.3,ly0=gy0+decY*0.35,lx1=gx1-decX*0.25,ly1=gy1-decY*0.5;
+    g.fillStyle="rgb(46,52,96)";
+    for(let i=0;i<=16;i++){const t=i/16;
+      const xx=lx0+(lx1-lx0)*t,yy=ly0+(ly1-ly0)*t+(R()-0.5)*3.4;
+      g.beginPath();g.arc(xx,yy,1.9,0,7);g.fill();}
+    g.strokeStyle="rgb(178,58,48)";g.lineWidth=2;
+    g.beginPath();g.moveTo(lx0,ly0);g.lineTo(lx1,ly1);g.stroke();
+    /* labels */
+    g.fillStyle="rgb(74,70,62)";g.font="600 7px Arial, sans-serif";g.textAlign="center";
+    g.fillText("C O M P U T E",(gx0+gx1)/2,h*0.95);
+    g.save();g.translate(w*0.05,(gy0+gy1)/2);g.rotate(-Math.PI/2);
+    g.fillText("L O S S",0,0);g.restore();
+    g.font="italic 8px Georgia, serif";g.textAlign="left";
+    g.fillStyle="rgba(74,70,62,0.85)";
+    g.fillText("it simply kept being true",w*0.42,h*0.32);
   } else { /* the water cooler */
     g.fillStyle="rgb(64,70,72)";g.fillRect(0,0,w,h*0.66);
     g.fillStyle="rgb(46,36,32)";g.fillRect(0,h*0.66,w,h*0.34);
@@ -576,9 +609,11 @@ function paintingTex(ch){
   const sheen=g.createLinearGradient(36,44,220,194);
   sheen.addColorStop(0,"rgba(255,250,235,0.14)");sheen.addColorStop(0.5,"rgba(255,250,235,0)");
   g.fillStyle=sheen;g.fillRect(36,44,184,150);
-  g.fillStyle="rgb(168,138,74)";g.fillRect(83,222,90,16);
-  g.fillStyle="rgb(40,32,18)";g.font="600 8px Arial, sans-serif";g.textAlign="center";
-  g.fillText(ex.t.toUpperCase().slice(0,24),128,232);
+  g.font="600 8px Arial, sans-serif";g.textAlign="center";
+  const plaque=ex.t.toUpperCase().slice(0,32);
+  const pw=Math.min(216,g.measureText(plaque).width+18);
+  g.fillStyle="rgb(168,138,74)";g.fillRect(128-pw/2,222,pw,16);
+  g.fillStyle="rgb(40,32,18)";g.fillText(plaque,128,232);
   grain(cv,5);return grab(cv);
 }
 /* the departures board: a live split-flap wall */
