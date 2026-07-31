@@ -544,6 +544,40 @@ function paintScene(g,ch,x,y,w,h){
     g.moveTo(w*0.64,h*0.44);g.lineTo(w*0.72,h*0.36);g.stroke();
     g.fillStyle="rgba(255,226,170,0.08)";g.beginPath();
     g.moveTo(0,0);g.lineTo(w*0.3,0);g.lineTo(w*0.12,h);g.lineTo(0,h);g.closePath();g.fill();
+  } else if(ch==="O"){ /* the panda diptych */
+    g.fillStyle="rgb(238,234,222)";g.fillRect(0,0,w,h);
+    const panda=(px,py,pw2)=>{ /* a crude panda in a photo square */
+      g.fillStyle="rgb(96,120,88)";g.fillRect(px,py,pw2,pw2);       /* bamboo backdrop */
+      g.fillStyle="rgb(70,92,66)";
+      for(let i=0;i<5;i++)g.fillRect(px+4+i*pw2/5.4,py+3,2,pw2-6);
+      const cx=px+pw2/2,cy=py+pw2*0.56;
+      g.fillStyle="rgb(244,242,236)";                               /* body, head */
+      g.beginPath();g.arc(cx,cy+pw2*0.16,pw2*0.26,0,7);g.fill();
+      g.beginPath();g.arc(cx,cy-pw2*0.12,pw2*0.2,0,7);g.fill();
+      g.fillStyle="rgb(24,22,24)";                                  /* ears, eyes, arms */
+      g.beginPath();g.arc(cx-pw2*0.15,cy-pw2*0.26,pw2*0.07,0,7);g.fill();
+      g.beginPath();g.arc(cx+pw2*0.15,cy-pw2*0.26,pw2*0.07,0,7);g.fill();
+      g.beginPath();g.arc(cx-pw2*0.08,cy-pw2*0.12,pw2*0.05,0,7);g.fill();
+      g.beginPath();g.arc(cx+pw2*0.08,cy-pw2*0.12,pw2*0.05,0,7);g.fill();
+      g.fillRect(cx-pw2*0.26,cy+pw2*0.04,pw2*0.13,pw2*0.3);
+      g.fillRect(cx+pw2*0.13,cy+pw2*0.04,pw2*0.13,pw2*0.3);
+      g.fillStyle="rgb(24,22,24)";g.beginPath();g.arc(cx,cy-pw2*0.05,pw2*0.025,0,7);g.fill();
+    };
+    const sq=h*0.52,y0=h*0.12;
+    panda(w*0.08,y0,sq);panda(w*0.62,y0,sq);
+    /* the whisper of noise between them */
+    const nx=w*0.435,ny=y0+sq*0.28,ns=sq*0.42;
+    for(let yy=0;yy<8;yy++)for(let xx=0;xx<8;xx++){
+      g.fillStyle="rgb("+((R()*255)|0)+","+((R()*255)|0)+","+((R()*255)|0)+")";
+      g.fillRect(nx+xx*ns/8,ny+yy*ns/8,ns/8,ns/8);}
+    g.fillStyle="rgb(74,70,62)";g.font="600 11px Arial, sans-serif";g.textAlign="center";
+    g.fillText("+",w*0.41,y0+sq*0.52);g.fillText("=",w*0.585,y0+sq*0.52);
+    g.font="600 7px Arial, sans-serif";
+    g.fillText("PANDA · 57.7%",w*0.08+sq/2,y0+sq+h*0.09);
+    g.fillStyle="rgb(160,52,44)";
+    g.fillText("GIBBON · 99.3%",w*0.62+sq/2,y0+sq+h*0.09);
+    g.fillStyle="rgba(74,70,62,0.85)";g.font="italic 7.5px Georgia, serif";
+    g.fillText("nothing you can see has changed",w*0.5,h*0.93);
   } else if(ch==="h"){ /* the scaling law, framed like a masterpiece */
     g.fillStyle="rgb(233,229,215)";g.fillRect(0,0,w,h);
     /* log-log graph paper: decade lines heavy, minor lines bunching toward each decade */
