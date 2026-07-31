@@ -61,6 +61,19 @@ scripts/
    });
    ```
 
+   Optional extras, all shown as a gold button or framed canvas on the placard:
+
+   - `url` + `cta` — link to a primary source or a live web piece
+     (`url: "https://arxiv.org/abs/1412.6572", cta: "READ THE PAPER"`).
+   - `embed: true` — if the linked page allows iframes, it opens *inside*
+     the museum in a theater overlay instead of a new tab. Check the site
+     sends no `X-Frame-Options`/`frame-ancestors` header first.
+   - `art: 1` — hangs a painted canvas on the wall and the placard. Add a
+     branch for your map character in `paintScene()` in `index.html` and
+     paint with plain canvas 2D calls (see the panda diptych or the
+     scaling-law graph for the style). No image files: the whole museum
+     stays a text-only repo, everything is painted in code.
+
 4. **Register it.** Add your file's path to `CONTENT_FILES` in `manifest.js`,
    next to the other exhibits of your hall. Exhibit numbers (Nº 1…N) are
    assigned automatically from this order — never write a number yourself.
