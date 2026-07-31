@@ -4,7 +4,7 @@ A first-person, walkable museum in a single HTML file. No dependencies, no build
 no network, a software-rendered 3D engine,
 procedural textures, synthesized WebAudio ambience, and 35 curated exhibits on AI safety.
 
-Live at **[visit.aisafetymuseum.org](https://visit.aisafetymuseum.org)**.
+Live at **[aisafety.museum](https://aisafety.museum)**.
 
 ## Run it
 
