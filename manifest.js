@@ -45,7 +45,9 @@ const CONTENT_FILES = [
   "exhibits/hall-of-forecasts/the-two-ramps.js",
   "exhibits/hall-of-forecasts/no-fire-alarm.js",
   "exhibits/foyer/the-march-of-progress-amended.js",
+  "rooms/the-new-wing/room.js",
   "exhibits/last-room/the-unfinished-exhibit.js",
+  "content/compose.js",
 ];
 
 /* Exhibit registry: numbering follows registration order. */
@@ -55,3 +57,12 @@ function EXHIBIT(ch, data) {
   data.n = Object.keys(EXHIBITS).length + 1;
   EXHIBITS[ch] = data;
 }
+
+/* Room registry: self-contained wings with their own local mini-map and
+   exhibit characters. The composer (content/compose.js) stitches each room
+   onto the building, growing south and east of the historic core, and remaps
+   local exhibit characters into the global namespace, so a hundred rooms
+   never collide. See CONTRIBUTING.md, "Open a new room". */
+const ROOMS = [];
+const ROOMRECTS = [];
+function ROOM(key, def) { def.key = key; ROOMS.push(def); }

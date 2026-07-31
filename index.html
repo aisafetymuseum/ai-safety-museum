@@ -190,7 +190,7 @@
   <div class="est">ANNO MMXXVI · HALL I</div>
   <h1>The Museum<br>of <span>AI Safety</span></h1>
   <div class="rule"></div>
-  <div id="ticket"><b>ADMIT ONE</b>35 EXHIBITS · NINE HALLS · ADMISSION FREE<br>NO FLASH PHOTOGRAPHY · MUSEUM JOGGING PERMITTED</div>
+  <div id="ticket"><b>ADMIT ONE</b><span id="ticketLine">35 EXHIBITS · NINE HALLS · ADMISSION FREE</span><br>NO FLASH PHOTOGRAPHY · MUSEUM JOGGING PERMITTED</div>
   <div class="controls">
     <span><i>W A S D / ↑ ↓</i>, walk</span><span><i>MOUSE / ← →</i>, look</span>
     <span><i>E · ENTER · CLICK</i>, view exhibit</span><span><i>SHIFT</i>, brisk pace</span>
@@ -231,7 +231,7 @@
 
 <div class="overlay hidden" id="cert"><div class="card">
   <h3>Certificate of Visit</h3>
-  <h2>All Thirty-Five Exhibits</h2>
+  <h2 id="certTitle">All Thirty-Five Exhibits</h2>
   <p>This certifies that <b>you</b> walked every hall of the Museum of AI Safety ,
   the failures, the warnings, the microscopes, the genies, the treaties, the old office, and the departures board ,
   and left through the gift shop of your own choices.</p>
@@ -1349,6 +1349,8 @@ function stepExhibit(d){
 }
 function updateCounter(){
   $("seen").textContent=visited.size;$("total").textContent=TOTAL;
+  $("ticketLine").textContent=TOTAL+" EXHIBITS · "+HALLORDER.length+" HALLS · ADMISSION FREE";
+  $("certTitle").textContent="All "+TOTAL+" Exhibits";
   if(visited.size===TOTAL)$("counter").style.color="var(--gold)";
 }
 function toast(txt,small){
@@ -1358,7 +1360,7 @@ function toast(txt,small){
 }
 
 /* ---------- minimap ---------- */
-const mm=$("minimap"),mmx=mm.getContext("2d"),MS=5;
+const mm=$("minimap"),mmx=mm.getContext("2d"),MS=Math.max(3,Math.min(5,Math.floor(440/MW)));
 mm.width=MW*MS;mm.height=MH*MS;
 const mmBase=document.createElement("canvas");mmBase.width=mm.width;mmBase.height=mm.height;
 (function(){const g=mmBase.getContext("2d",{willReadFrequently:true});

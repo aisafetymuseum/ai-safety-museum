@@ -53,7 +53,7 @@ F.....................................M##...............#
 #########################################################
 `.trim();
 const MAP = MAPSTR.split("\n");
-const MW = MAP[0].length, MH = MAP.length;
+let MW = MAP[0].length, MH = MAP.length;
 MAP.forEach((r,i)=>console.assert(r.length===MW, "map row "+i+" bad length "+r.length));
 const cell = (x,y)=> (x>=0&&x<MW&&y>=0&&y<MH) ? MAP[y][x] : "#";
 const solid = (x,y)=> cell(x|0,y|0)!==".";

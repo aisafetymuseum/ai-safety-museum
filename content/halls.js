@@ -14,6 +14,8 @@ const ZONES = {
   shop:    {name:"THE GIFT SHOP · GET INVOLVED", color:"#e0993f", rgb:[50,40,28]}
 };
 function zoneAt(x,y){
+  for(const r of ROOMRECTS)
+    if(x>=r.x0&&x<=r.x1&&y>=r.y0&&y<=r.y1)return r.key;
   if (x>=39) return "forecast";
   if (y>=36) return "shop";
   if (y>=27) return x<=10?"office":"foyer";

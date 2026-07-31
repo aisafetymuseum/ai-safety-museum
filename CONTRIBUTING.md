@@ -26,6 +26,10 @@ exhibits/
   hall-of-forecasts/
   last-room/
     …one file per exhibit
+rooms/
+  the-new-wing/       room modules: whole rooms other people donated
+scripts/
+  validate.js         run `node scripts/validate.js` before you PR (CI runs it too)
 ```
 
 ## Add an exhibit (the common case)
@@ -66,19 +70,47 @@ exhibits/
    find your exhibit, click it, read your placard. Check the browser console
    (F12) for errors; the map file asserts that every row has equal length.
 
-## Open a new hall (own a room)
+## Own a room (the scalable way)
 
-1. In `content/map.js`, carve your room: walls `#`, floor `.`. Keep every map
-   row exactly the same length.
-2. In `content/halls.js`: add a key to `ZONES` (display name + accent color +
-   wall tint), teach `zoneAt(x, y)` your room's rectangle, add a `WINGNAME`
-   entry, and put your key in `HALLORDER`.
-3. Create `exhibits/<your-hall>/` and fill it with exhibits as above.
-4. Optionally add a destination in `content/waypoints.js` so the guide arrow
-   can escort visitors to you.
+A **room module** is a whole wing in one folder: its own mini-map, its own
+exhibits, its own name and color. You never touch the shared floor plan, the
+shared character set, or anyone else's files — the composer stitches your
+room onto the building automatically, growing it south and east like a city.
+A hundred rooms can coexist without a single merge conflict on the map.
 
-Wall textures, minimap coloring, and the hall-entry toast all derive from
-`ZONES` automatically.
+Copy `rooms/the-new-wing/` and make it yours:
+
+```js
+ROOM("risk-atlas", {                 // unique key
+  name: "The Risk Atlas",            // hall name (label, directory, toast)
+  color: "#8fd0f5",                  // accent color; wall tint derives from it
+  map: [                             // your floor plan: # wall · . floor
+    "####A####",                     // letters = YOUR exhibits (local to this
+    "#.......#",                     //   room; collisions are impossible)
+    "B.......C",
+    "#.......#",
+    "#########",
+  ],
+  exhibits: {
+    A: { t: "…", obj: "…", body: ["…", "…"], q: "…" },
+    B: { … }, C: { … },
+  }
+});
+```
+
+Then add `rooms/<your-room>/room.js` to `manifest.js` (before
+`content/compose.js`, which must stay last) and run
+`node scripts/validate.js`. The composer gives your room a doorway, wall
+textures, minimap coloring, directory listing, and exhibit numbers — all
+derived from the declaration above. Keep an unbroken `#` ring around your
+map, and put exhibits in the walls with floor in front of them.
+
+## Renovate the historic core (advanced)
+
+The original nine halls live in the shared `content/map.js` and
+`exhibits/<hall>/` folders — you can still add single exhibits there where a
+wall block fits (see above), or adjust `content/halls.js` for hall-level
+changes. For anything room-sized, prefer a room module.
 
 ## House style
 
