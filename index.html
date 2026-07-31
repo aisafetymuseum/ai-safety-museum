@@ -143,6 +143,20 @@
     color:var(--gold);border:1px solid var(--gold-dim);padding:11px 20px;text-decoration:none;text-transform:uppercase}
   #pcLink:hover{background:rgba(29,79,208,.06)}
   #placard blockquote{margin-top:20px;font-style:italic;color:var(--gold);font-size:14.5px;line-height:1.6;text-align:center;padding:0 12px}
+  /* the theater: play an exhibit without leaving the building */
+  #theater{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;background:#0a0a0d}
+  #theater.hidden{display:none}
+  #thBar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    padding:calc(10px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) 10px calc(16px + env(safe-area-inset-left,0px));
+    background:#101014;border-bottom:1px solid var(--gold-dim)}
+  #thTitle{font-family:var(--caps);font-size:11px;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  #thBar .grp{display:flex;align-items:center;gap:16px;font-family:var(--caps);font-size:9.5px;letter-spacing:.22em;
+    color:var(--ink-dim);text-transform:uppercase;white-space:nowrap}
+  #thExt{color:var(--ink-dim);text-decoration:none;border:1px solid #3a3940;padding:6px 12px}
+  #thExt:hover,#thClose:hover{color:var(--gold)}
+  #thClose{cursor:pointer;color:var(--ink);border:1px solid var(--gold-dim);padding:6px 12px}
+  #thFrame{flex:1;border:0;width:100%;background:#f4f2ec}
   #placard .foot{margin-top:30px;padding-top:16px;border-top:1px solid #26252b;display:flex;justify-content:space-between;
     font-family:var(--caps);font-size:9.5px;letter-spacing:.24em;color:var(--ink-dim);text-transform:uppercase}
   #placard .foot span b{color:var(--ink);font-weight:400;border:1px solid #3a3940;padding:1px 6px;margin-right:6px}
@@ -199,6 +213,16 @@
   <div id="enterHint">CLICK TO ENTER</div>
 </div>
 
+<div id="theater" class="hidden">
+  <div id="thBar">
+    <span id="thTitle"></span>
+    <span class="grp">
+      <a id="thExt" href="#" target="_blank" rel="noopener">OPEN IN NEW TAB ↗</a>
+      <span id="thClose">✕ BACK TO THE MUSEUM</span>
+    </span>
+  </div>
+  <iframe id="thFrame" src="about:blank" allow="fullscreen" title="Exhibit"></iframe>
+</div>
 <div class="overlay hidden" id="placard"><div class="card">
   <div class="wingchip" id="pcWing"></div>
   <div class="num" id="pcNum"></div>
@@ -1139,6 +1163,7 @@ addEventListener("keydown",e=>{
   if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key))e.preventDefault();
   keys[e.code]=true;
   if(!started)return;
+  if(theaterOpen){if(e.code==="Escape")closeTheater();return;}
   if(e.code==="KeyE"||e.code==="Enter"){overlayOpen==="placard"?closeOverlays():interact();}
   if(e.code==="Escape")closeOverlays();
   if(e.code==="KeyH")overlayOpen==="help"?closeOverlays():openHelp();
@@ -1205,8 +1230,26 @@ function interact(){
     else if(centerHit.ch==="Y")openJoin();
   }
 }
+/* ---------- the theater: play embeddable exhibits in-place ---------- */
+let theaterOpen=false,placardEx=null;
+function openTheater(ex){
+  closeOverlays();theaterOpen=true;dropKeys();
+  $("thTitle").textContent=ex.t;
+  $("thExt").href=ex.url;
+  $("thFrame").src=ex.url;
+  $("theater").classList.remove("hidden");
+  if(document.pointerLockElement)document.exitPointerLock();
+  sfxChime(true);
+}
+function closeTheater(){
+  if(!theaterOpen)return;
+  theaterOpen=false;
+  $("thFrame").src="about:blank";
+  $("theater").classList.add("hidden");
+  sfxChime(false);
+}
 function openPlacard(ch){
-  const ex=EXHIBITS[ch];placardCh=ch;overlayOpen="placard";
+  const ex=EXHIBITS[ch];placardCh=ch;placardEx=ex;overlayOpen="placard";
   const zc=ZONES[ex.wing].color;
   $("pcWing").textContent=WINGNAME[ex.wing];$("pcWing").style.color=zc;
   $("pcNum").textContent="EXHIBIT Nº "+String(ex.n).padStart(2,"0")+" OF "+TOTAL;
@@ -1216,7 +1259,8 @@ function openPlacard(ch){
   $("pcArt").innerHTML=ex.art?'<img src="'+EXTEX[ch].cv.toDataURL()+'">'
     :ex.mural?'<img src="'+MARCH.cv.toDataURL()+'">':"";
   if(ex.url){$("pcLink").style.display="inline-block";$("pcLink").href=ex.url;
-    $("pcLink").textContent=ex.linkLabel||((ex.cta||"LEARN MORE")+" · "+ex.url.replace("https://","").replace("www.","").toUpperCase()+" ↗");}
+    $("pcLink").textContent=ex.linkLabel||(ex.embed?(ex.cta||"OPEN")+" · WITHOUT LEAVING THE MUSEUM"
+      :(ex.cta||"LEARN MORE")+" · "+ex.url.replace("https://","").replace("www.","").toUpperCase()+" ↗");}
   else $("pcLink").style.display="none";
   $("pcPrev").style.display="";$("pcNext").style.display="";
   $("placard").classList.remove("hidden");
@@ -1225,7 +1269,7 @@ function openPlacard(ch){
   if(!visited.has(ch)){visited.add(ch);persist();stampVisited(ch);updateCounter();}
 }
 function openProduct(ch){
-  closeOverlays();const p=SHOP[ch];overlayOpen="placard";placardCh=null;
+  closeOverlays();const p=SHOP[ch];overlayOpen="placard";placardCh=null;placardEx=null;
   $("pcWing").textContent="THE GIFT SHOP · GET INVOLVED";$("pcWing").style.color="#b8722c";
   $("pcNum").textContent="AISLE · "+p.aisle.toUpperCase();
   $("pcTitle").textContent=p.name;$("pcObj").textContent=p.tag;
@@ -1663,6 +1707,10 @@ $("btnSound").addEventListener("click",()=>{muted=!muted;if(master)master.gain.v
 $("pcNext").addEventListener("click",()=>stepExhibit(1));
 $("pcPrev").addEventListener("click",()=>stepExhibit(-1));
 $("pcClose").addEventListener("click",closeOverlays);
+$("thClose").addEventListener("click",closeTheater);
+$("pcLink").addEventListener("click",e=>{
+  if(placardEx&&placardEx.embed&&overlayOpen==="placard"&&placardCh){e.preventDefault();openTheater(placardEx);}
+});
 $("pcSpeak").addEventListener("click",speakPlacard);
 /* tap outside the card closes any overlay (phones have no ESC) */
 ["placard","help","cert","index","join","volun","guide"].forEach(id=>

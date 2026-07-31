@@ -46,6 +46,10 @@ const CONTENT_FILES = [
   "exhibits/hall-of-forecasts/no-fire-alarm.js",
   "exhibits/foyer/the-march-of-progress-amended.js",
   "rooms/the-new-wing/room.js",
+  "rooms/the-arcade/room.js",
+  "rooms/hall-of-mirrors/room.js",
+  "rooms/the-midway/room.js",
+  "rooms/the-workbench/room.js",
   "exhibits/last-room/the-unfinished-exhibit.js",
   "content/compose.js",
 ];
