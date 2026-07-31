@@ -1,0 +1,11 @@
+name: Rebuild production
+on:
+  push:
+    branches: [main]
+
+jobs:
+  redeploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger production rebuild
+        run: curl -sf -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}" > /dev/null && echo "production rebuild triggered"
