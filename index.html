@@ -287,6 +287,8 @@
       <div class="nm">AI Safety Camp</div><div class="ds">Part-time, remote research collaborations for people entering the field.</div><div class="ur">AISAFETY.CAMP</div></a>
     <a class="joinitem" href="https://www.aisafety.com" target="_blank" rel="noopener">
       <div class="nm">AISafety.com</div><div class="ds">The field's directory: local groups, events, courses, and volunteer opportunities on one map.</div><div class="ur">AISAFETY.COM</div></a>
+    <a class="joinitem" href="https://github.com/aisafetymuseum/ai-safety-museum/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">
+      <div class="nm">Build This Museum</div><div class="ds">The building you are standing in is a public repo. Donate an exhibit, or claim a whole room, the instructions take five minutes.</div><div class="ur">HOW TO CONTRIBUTE · GITHUB</div></a>
   </div>
   <div class="hallhead" style="color:#b48ce8">Careers &amp; programs</div>
   <div class="joingrid">
@@ -1213,7 +1215,9 @@ function openPlacard(ch){
   $("pcQuote").textContent=ex.q||"";$("pcQuote").style.display=ex.q?"block":"none";
   $("pcArt").innerHTML=ex.art?'<img src="'+EXTEX[ch].cv.toDataURL()+'">'
     :ex.mural?'<img src="'+MARCH.cv.toDataURL()+'">':"";
-  $("pcLink").style.display="none";
+  if(ex.url){$("pcLink").style.display="inline-block";$("pcLink").href=ex.url;
+    $("pcLink").textContent=ex.linkLabel||((ex.cta||"LEARN MORE")+" · "+ex.url.replace("https://","").replace("www.","").toUpperCase()+" ↗");}
+  else $("pcLink").style.display="none";
   $("pcPrev").style.display="";$("pcNext").style.display="";
   $("placard").classList.remove("hidden");
   if(document.pointerLockElement)document.exitPointerLock();

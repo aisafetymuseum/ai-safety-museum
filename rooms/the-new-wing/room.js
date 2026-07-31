@@ -20,7 +20,10 @@ ROOM("newwing", {
         "Every museum keeps a room it has not filled yet. This is ours. The building you are standing in is a text file; this room was added by a few dozen more lines of it, and the museum grew a wall to hold this placard.",
         "If there is a corner of AI safety you wish this museum covered, the history, a risk, a research agenda, a hope, it is yours to curate. Fork the museum, copy this room's folder, and hang something on the hook."
       ],
-      q: "“The museum is under construction. So is the field.” · The Curators"
+      q: "“The museum is under construction. So is the field.” · The Curators",
+      url: "https://github.com/aisafetymuseum/ai-safety-museum/blob/main/CONTRIBUTING.md",
+      cta: "CLAIM THIS ROOM",
+      linkLabel: "CLAIM THIS ROOM · HOW TO CONTRIBUTE ↗"
     }
   }
 });
